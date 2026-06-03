@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Advanced Auction Insights Calculator</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    h2, h3 {
+      color: #333;
+    }
+    .input-section {
+      background-color: #f9f9f9;
+      padding: 15px;
+      border-radius: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+    }
+    label {
+      font-weight: bold;
+      display: block;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      margin-bottom: 10px;
+      box-sizing: border-box;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      padding: 12px 20px;
+      background-color: #0056b3;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+      font-size: 16px;
+      font-weight: bold;
+    }
+    button:hover {
+      background-color: #004494;
+    }
+    .results-box {
+      margin-top: 25px;
+      padding: 15px;
+      background-color: #eef5fc;
+      border: 1px solid #cce0f5;
+      border-radius: 5px;
+      line-height: 1.8;
+      display: none;
+    }
+    .highlight {
+      color: #d9534f;
+      font-weight: bold;
+    }
+    .success {
+      color: #5cb85c;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <h2>Advanced Market Share Calculator</h2>
+
+  <div class="input-section">
+    <h3>Your Data</h3>
+    <label>Your Actual Impressions (Number):</label>
+    <input type="number" id="myImpressions" placeholder="e.g., 1000">
+
+    <label>Your Impression Share (%):</label>
+    <input type="number" id="myIS" placeholder="e.g., 10">
+    
+    <label>Your Top of Page Rate (%):</label>
+    <input type="number" id="myTop" placeholder="e.g., 60">
+    
+    <label>Your Abs. Top of Page Rate (%):</label>
+    <input type="number" id="myAbsTop" placeholder="e.g., 20">
+  </div>
+
+  <div class="input-section">
+    <h3>Competitor Data</h3>
+    <label>Competitor Impression Share (%):</label>
+    <input type="number" id="compIS" placeholder="e.g., 60">
+
+    <label>Overlap Rate (%):</label>
+    <input type="number" id="overlapRate" placeholder="e.g., 45">
+    
+    <label>Position Above Rate (%):</label>
+    <input type="number" id="poaRate" placeholder="e.g., 55">
+    
+    <label>Competitor Top of Page Rate (%):</label>
+    <input type="number" id="compTop" placeholder="e.g., 80">
+    
+    <label>Competitor Abs. Top of Page Rate (%):</label>
+    <input type="number" id="compAbsTop" placeholder="e.g., 45">
+    
+    <label>Outranking Share (%):</label>
+    <input type="number" id="outrankingShare" placeholder="e.g., 20">
+  </div>
+
+  <button onclick="calculateData()">Calculate Real Numbers</button>
+
+  <div class="results-box" id="output">
+    </div>
+
+  <script>
+    function calculateData() {
+      // 1. Get raw inputs and convert percentages to decimals
+      let myImp = parseFloat(document.getElementById("myImpressions").value) || 0;
+      let myIS = (parseFloat(document.getElementById("myIS").value) || 0) / 100;
+      let myTop = (parseFloat(document.getElementById("myTop").value) || 0) / 100;
+      let myAbsTop = (parseFloat(document.getElementById("myAbsTop").value) || 0) / 100;
+      
+      let compIS = (parseFloat(document.getElementById("compIS").value) || 0) / 100;
+      let overlap = (parseFloat(document.getElementById("overlapRate").value) || 0) / 100;
+      let poa = (parseFloat(document.getElementById("poaRate").value) || 0) / 100;
+      let compTop = (parseFloat(document.getElementById("compTop").value) || 0) / 100;
+      let compAbsTop = (parseFloat(document.getElementById("compAbsTop").value) || 0) / 100;
+      let outranking = (parseFloat(document.getElementById("outrankingShare").value) || 0) / 100;
+
+      if (myIS === 0) {
+        alert("Please enter Your Impression Share to calculate the market size.");
+        return;
+      }
+
+      // 2. Core Market Calculations
+      let totalMarketSearches = myImp / myIS;
+      let compImp = totalMarketSearches * compIS;
+      
+      // 3. Visibility Calculations
+      let myTopViews = myImp * myTop;
+      let myAbsTopViews = myImp * myAbsTop;
+      let compTopViews = compImp * compTop;
+      let compAbsTopViews = compImp * compAbsTop;
+
+      // 4. Head-to-Head Calculations
+      let headToHeadBattles = myImp * overlap;
+      // Position Above is based on the times you BOTH showed up (Head-to-Head)
+      let timesBeatenByCompetitor = headToHeadBattles * poa; 
+      // Outranking Share is based on total eligible market searches
+      let timesYouWon = totalMarketSearches * outranking; 
+
+      // 5. Display the results
+      let outputDiv = document.getElementById("output");
+      outputDiv.style.display = "block";
+      
+      outputDiv.innerHTML = 
+        "<h3>Market Overview</h3>" +
+        "<strong>Total Market Searches:</strong> " + Math.round(totalMarketSearches) + " potential patients<br>" +
+        "<strong>Your Total Impressions:</strong> " + Math.round(myImp) + " views<br>" +
+        "<strong>Competitor Impressions:</strong> " + Math.round(compImp) + " views<br>" +
+        
+        "<h3>Ad Placement (Who got the best spots?)</h3>" +
+        "<strong>Your Top of Page Views:</strong> " + Math.round(myTopViews) + "<br>" +
+        "<strong>Competitor Top of Page Views:</strong> " + Math.round(compTopViews) + "<br>" +
+        "<strong>Your Absolute #1 Spot Views:</strong> " + Math.round(myAbsTopViews) + "<br>" +
+        "<strong>Competitor Absolute #1 Spot Views:</strong> " + Math.round(compAbsTopViews) + "<br>" +
+        
+        "<h3>Head-to-Head Battles</h3>" +
+        "You both appeared on the page at the exact same time <strong>" + Math.round(headToHeadBattles) + "</strong> times.<br>" +
+        "Out of those battles, the competitor's ad was placed above yours <span class='highlight'>" + Math.round(timesBeatenByCompetitor) + "</span> times.<br>" +
+        "Overall, you outranked them (showed up higher or showed up when they didn't) <span class='success'>" + Math.round(timesYouWon) + "</span> times.";
+    }
+  </script>
+
+</body>
+</html>
