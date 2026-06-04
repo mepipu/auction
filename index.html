@@ -1,174 +1,294 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>Advanced Auction Insights Calculator</title>
+  <title>Auction Insights Consultant Report</title>
   <style>
     body {
       font-family: Arial, sans-serif;
       padding: 20px;
-      max-width: 500px;
+      max-width: 800px;
       margin: auto;
-    }
-    h2, h3 {
       color: #333;
     }
-    .input-section {
-      background-color: #f9f9f9;
-      padding: 15px;
-      border-radius: 5px;
+    .input-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      background-color: #f4f7f6;
+      padding: 20px;
+      border-radius: 8px;
       margin-bottom: 20px;
       border: 1px solid #ddd;
     }
-    label {
-      font-weight: bold;
-      display: block;
-      margin-top: 10px;
-      font-size: 14px;
-    }
-    input {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      margin-bottom: 10px;
-      box-sizing: border-box;
-      border: 1px solid #ccc;
-      border-radius: 4px;
-    }
+    .input-section h3 { margin-top: 0; }
+    label { font-weight: bold; display: block; margin-top: 10px; font-size: 14px; }
+    input { width: 100%; padding: 8px; margin-top: 5px; box-sizing: border-box; border: 1px solid #ccc; border-radius: 4px; }
     button {
-      padding: 12px 20px;
-      background-color: #0056b3;
-      color: white;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
-      width: 100%;
-      font-size: 16px;
-      font-weight: bold;
+      padding: 15px; background-color: #2c3e50; color: white; border: none; border-radius: 4px;
+      cursor: pointer; width: 100%; font-size: 18px; font-weight: bold; margin-bottom: 30px;
     }
-    button:hover {
-      background-color: #004494;
+    button:hover { background-color: #1a252f; }
+    
+    /* Report Styles */
+    .report-box {
+      padding: 30px; border: 1px solid #e1e8ed; border-radius: 8px; background-color: #fff;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.05); display: none; line-height: 1.6;
     }
-    .results-box {
-      margin-top: 25px;
-      padding: 15px;
-      background-color: #eef5fc;
-      border: 1px solid #cce0f5;
-      border-radius: 5px;
-      line-height: 1.8;
-      display: none;
-    }
-    .highlight {
-      color: #d9534f;
-      font-weight: bold;
-    }
-    .success {
-      color: #5cb85c;
-      font-weight: bold;
-    }
+    .report-box h2 { color: #2c3e50; border-bottom: 2px solid #3498db; padding-bottom: 5px; }
+    .report-box h3 { color: #34495e; margin-top: 25px; }
+    .math-block { background-color: #f8f9fa; padding: 10px 15px; border-left: 4px solid #3498db; margin: 10px 0; font-family: monospace; font-size: 14px; }
+    table { width: 100%; border-collapse: collapse; margin: 15px 0; }
+    th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+    th { background-color: #f2f2f2; }
+    .highlight { background-color: #fff3cd; padding: 2px 5px; font-weight: bold; }
+    .success { background-color: #d4edda; padding: 2px 5px; font-weight: bold; }
+    .alert { background-color: #f8d7da; padding: 2px 5px; font-weight: bold; }
   </style>
 </head>
 <body>
 
-  <h2>Advanced Market Share Calculator</h2>
+  <h2>Generate Consultant Report</h2>
 
-  <div class="input-section">
-    <h3>Your Data</h3>
-    <label>Your Actual Impressions (Number):</label>
-    <input type="number" id="myImpressions" placeholder="e.g., 1000">
+  <div class="input-grid">
+    <div class="input-section">
+      <h3>Your Data</h3>
+      <label>Your Impressions (Number):</label>
+      <input type="number" id="myImpressions" placeholder="e.g., 88">
 
-    <label>Your Impression Share (%):</label>
-    <input type="number" id="myIS" placeholder="e.g., 10">
-    
-    <label>Your Top of Page Rate (%):</label>
-    <input type="number" id="myTop" placeholder="e.g., 60">
-    
-    <label>Your Abs. Top of Page Rate (%):</label>
-    <input type="number" id="myAbsTop" placeholder="e.g., 20">
-  </div>
-
-  <div class="input-section">
-    <h3>Competitor Data</h3>
-    <label>Competitor Impression Share (%):</label>
-    <input type="number" id="compIS" placeholder="e.g., 60">
-
-    <label>Overlap Rate (%):</label>
-    <input type="number" id="overlapRate" placeholder="e.g., 45">
-    
-    <label>Position Above Rate (%):</label>
-    <input type="number" id="poaRate" placeholder="e.g., 55">
-    
-    <label>Competitor Top of Page Rate (%):</label>
-    <input type="number" id="compTop" placeholder="e.g., 80">
-    
-    <label>Competitor Abs. Top of Page Rate (%):</label>
-    <input type="number" id="compAbsTop" placeholder="e.g., 45">
-    
-    <label>Outranking Share (%):</label>
-    <input type="number" id="outrankingShare" placeholder="e.g., 20">
-  </div>
-
-  <button onclick="calculateData()">Calculate Real Numbers</button>
-
-  <div class="results-box" id="output">
+      <label>Your Impression Share (%):</label>
+      <input type="number" id="myIS" step="0.01" placeholder="e.g., 35.42">
+      
+      <label>Your Top of Page Rate (%):</label>
+      <input type="number" id="myTop" step="0.01" placeholder="e.g., 61.76">
+      
+      <label>Your Abs. Top of Page Rate (%):</label>
+      <input type="number" id="myAbsTop" step="0.01" placeholder="e.g., 35.29">
     </div>
 
+    <div class="input-section">
+      <h3>Competitor Data</h3>
+      <label>Competitor Impression Share (%):</label>
+      <input type="number" id="compIS" step="0.01" placeholder="e.g., 14.58">
+
+      <label>Overlap Rate (%):</label>
+      <input type="number" id="overlapRate" step="0.01" placeholder="e.g., 41.18">
+      
+      <label>Position Above Rate (%):</label>
+      <input type="number" id="poaRate" step="0.01" placeholder="e.g., 28.57">
+      
+      <label>Competitor Top of Page Rate (%):</label>
+      <input type="number" id="compTop" step="0.01" placeholder="e.g., 100">
+      
+      <label>Competitor Abs. Top Rate (%):</label>
+      <input type="number" id="compAbsTop" step="0.01" placeholder="e.g., 21.43">
+    </div>
+  </div>
+
+  <button onclick="generateReport()">Translate Data into Report</button>
+
+  <div class="report-box" id="output"></div>
+
   <script>
-    function calculateData() {
-      // 1. Get raw inputs and convert percentages to decimals
+    function generateReport() {
+      // Get Values
       let myImp = parseFloat(document.getElementById("myImpressions").value) || 0;
-      let myIS = (parseFloat(document.getElementById("myIS").value) || 0) / 100;
-      let myTop = (parseFloat(document.getElementById("myTop").value) || 0) / 100;
-      let myAbsTop = (parseFloat(document.getElementById("myAbsTop").value) || 0) / 100;
+      let myIS_raw = parseFloat(document.getElementById("myIS").value) || 0;
+      let myTop_raw = parseFloat(document.getElementById("myTop").value) || 0;
+      let myAbsTop_raw = parseFloat(document.getElementById("myAbsTop").value) || 0;
       
-      let compIS = (parseFloat(document.getElementById("compIS").value) || 0) / 100;
-      let overlap = (parseFloat(document.getElementById("overlapRate").value) || 0) / 100;
-      let poa = (parseFloat(document.getElementById("poaRate").value) || 0) / 100;
-      let compTop = (parseFloat(document.getElementById("compTop").value) || 0) / 100;
-      let compAbsTop = (parseFloat(document.getElementById("compAbsTop").value) || 0) / 100;
-      let outranking = (parseFloat(document.getElementById("outrankingShare").value) || 0) / 100;
+      let compIS_raw = parseFloat(document.getElementById("compIS").value) || 0;
+      let overlap_raw = parseFloat(document.getElementById("overlapRate").value) || 0;
+      let poa_raw = parseFloat(document.getElementById("poaRate").value) || 0;
+      let compTop_raw = parseFloat(document.getElementById("compTop").value) || 0;
+      let compAbsTop_raw = parseFloat(document.getElementById("compAbsTop").value) || 0;
 
-      if (myIS === 0) {
-        alert("Please enter Your Impression Share to calculate the market size.");
-        return;
-      }
+      if (myIS_raw === 0) { alert("Please enter Your Impression Share."); return; }
 
-      // 2. Core Market Calculations
-      let totalMarketSearches = myImp / myIS;
-      let compImp = totalMarketSearches * compIS;
+      // Conversions
+      let myIS = myIS_raw / 100;
+      let myTop = myTop_raw / 100;
+      let myAbsTop = myAbsTop_raw / 100;
+      let compIS = compIS_raw / 100;
+      let overlap = overlap_raw / 100;
+      let poa = poa_raw / 100;
+      let compTop = compTop_raw / 100;
+      let compAbsTop = compAbsTop_raw / 100;
+
+      // Base Math
+      let totalMarket = Math.round(myImp / myIS);
+      let missedImp = totalMarket - myImp;
       
-      // 3. Visibility Calculations
-      let myTopViews = myImp * myTop;
-      let myAbsTopViews = myImp * myAbsTop;
-      let compTopViews = compImp * compTop;
-      let compAbsTopViews = compImp * compAbsTop;
+      // My Positions
+      let myTopViews = Math.round(myImp * myTop);
+      let myAbsTopViews = Math.round(myImp * myAbsTop);
+      let myOtherTop = myTopViews - myAbsTopViews;
+      // Prevent negative numbers if data is weird
+      if (myOtherTop < 0) myOtherTop = 0; 
+      let myLower = myImp - myTopViews;
+      if (myLower < 0) myLower = 0;
 
-      // 4. Head-to-Head Calculations
-      let headToHeadBattles = myImp * overlap;
-      // Position Above is based on the times you BOTH showed up (Head-to-Head)
-      let timesBeatenByCompetitor = headToHeadBattles * poa; 
-      // Outranking Share is based on total eligible market searches
-      let timesYouWon = totalMarketSearches * outranking; 
+      // Competitor Math
+      let compImp = Math.round(totalMarket * compIS);
+      let overlapViews = Math.round(myImp * overlap);
+      let overlapCompRatio = Math.round((overlapViews / compImp) * 100) || 0;
+      
+      let compAboveMe = Math.round(overlapViews * poa);
+      let meAboveComp = overlapViews - compAboveMe;
 
-      // 5. Display the results
+      // Competitor Positions
+      let compTopViews = Math.round(compImp * compTop);
+      let compAbsTopViews = Math.round(compImp * compAbsTop);
+      let compOtherTop = compTopViews - compAbsTopViews;
+      if (compOtherTop < 0) compOtherTop = 0;
+      let compLower = compImp - compTopViews;
+      if (compLower < 0) compLower = 0;
+
+      // Consultant Insights variables
+      let othersImp = totalMarket - myImp - compImp;
+      if (othersImp < 0) othersImp = 0;
+      let winRate = Math.round((meAboveComp / overlapViews) * 100) || 0;
+      
+      let ratio = (myImp / compImp).toFixed(1);
+      let ratioText = myImp >= compImp ? `You appear ${ratio}× more often (${myImp} vs ~${compImp} impressions).` : `They appear ${(compImp/myImp).toFixed(1)}× more often (~${compImp} vs ${myImp} impressions).`;
+
+      // Generate HTML
+      let html = `
+        <p>Let's translate the percentages into actual auction behavior as closely as possible.</p>
+
+        <h2>Your Data</h2>
+        <p>Impressions = <strong>${myImp}</strong><br>
+        Impression Share = <strong>${myIS_raw}%</strong></p>
+        
+        <p>This means Google estimates there were roughly:</p>
+        <div class="math-block">${myImp} &divide; ${myIS.toFixed(4)} &asymp; ${totalMarket} total eligible impressions</div>
+        <p>So you were eligible to show about ${totalMarket} times, but only showed ${myImp} times.</p>
+
+        <h3>Lost Opportunity</h3>
+        <ul>
+          <li>Eligible impressions: ~${totalMarket}</li>
+          <li>Actual impressions: ${myImp}</li>
+          <li>Missed impressions: <strong>~${missedImp}</strong></li>
+        </ul>
+        <p>You're losing about <span class="highlight">${missedImp} potential impressions</span> due to budget, Ad Rank, or both.</p>
+
+        <h2>Position Analysis</h2>
+        <p>Top of Page Rate = <strong>${myTop_raw}%</strong><br>
+        Of your ${myImp} impressions:</p>
+        <div class="math-block">${myImp} &times; ${myTop_raw}% &asymp; ${myTopViews} impressions</div>
+        <p>Your ad appeared above organic results about ${myTopViews} times.</p>
+
+        <p>Absolute Top Rate = <strong>${myAbsTop_raw}%</strong><br>
+        Of your ${myImp} impressions:</p>
+        <div class="math-block">${myImp} &times; ${myAbsTop_raw}% &asymp; ${myAbsTopViews} impressions</div>
+        <p>You were the #1 ad approximately ${myAbsTopViews} times.</p>
+
+        <p>So your ${myImp} impressions break down roughly as:</p>
+        <table>
+          <tr><th>Position</th><th>Impressions</th></tr>
+          <tr><td>#1 Position</td><td>${myAbsTopViews}</td></tr>
+          <tr><td>Other Top Positions</td><td>${myOtherTop}</td></tr>
+          <tr><td>Lower Positions</td><td>${myLower}</td></tr>
+          <tr style="font-weight:bold; background-color:#f8f9fa;"><td>Total</td><td>${myImp}</td></tr>
+        </table>
+        <p><em>(${myAbsTopViews} + ${myOtherTop} + ${myLower} = ${myImp})</em></p>
+
+        <h2>Competitor Analysis</h2>
+        <p>Competitor Impression Share = <strong>${compIS_raw}%</strong><br>
+        Using the same estimated market size:</p>
+        <div class="math-block">${totalMarket} &times; ${compIS_raw}% &asymp; ${compImp} impressions</div>
+        <p>The competitor showed about ${compImp} times.</p>
+
+        <p>Overlap Rate = <strong>${overlap_raw}%</strong><br>
+        This is based on your impressions. You had ${myImp} impressions.</p>
+        <div class="math-block">${myImp} &times; ${overlap_raw}% &asymp; ${overlapViews} auctions</div>
+        <p>The competitor appeared alongside you about ${overlapViews} times.</p>
+
+        <div style="background-color: #eef2f5; padding: 10px; border-left: 4px solid #95a5a6; margin-bottom: 15px;">
+          <strong>Interesting observation:</strong><br>
+          Competitor estimated impressions = ${compImp}<br>
+          Overlap count &asymp; ${overlapViews}<br>
+          This suggests you were present for roughly ${overlapCompRatio}% of all their total appearances.
+        </div>
+
+        <p>Position Above Rate = <strong>${poa_raw}%</strong><br>
+        Of those overlapping auctions (~${overlapViews}):</p>
+        <div class="math-block">${overlapViews} &times; ${poa_raw}% &asymp; ${compAboveMe} auctions</div>
+        <p>Competitor ranked above you about ${compAboveMe} times.</p>
+        <p>Therefore:</p>
+        <div class="math-block">${overlapViews} &minus; ${compAboveMe} = ${meAboveComp} auctions</div>
+        <p>You ranked above them about ${meAboveComp} times.</p>
+
+        <h3>Competitor's Positions</h3>
+        <p>Competitor Top of Page Rate = <strong>${compTop_raw}%</strong><br>
+        Competitor impressions &asymp; ${compImp}<br>
+        So:</p>
+        <div class="math-block">${compImp} &times; ${compTop_raw}% &asymp; ${compTopViews} top-of-page impressions</div>
+
+        <p>Competitor Absolute Top Rate = <strong>${compAbsTop_raw}%</strong></p>
+        <div class="math-block">${compImp} &times; ${compAbsTop_raw}% &asymp; ${compAbsTopViews} impressions</div>
+        <p>Competitor held the #1 position about ${compAbsTopViews} times.</p>
+
+        <p>Their breakdown:</p>
+        <table>
+          <tr><th>Position</th><th>Impressions</th></tr>
+          <tr><td>#1 Position</td><td>${compAbsTopViews}</td></tr>
+          <tr><td>Other Top Positions</td><td>${compOtherTop}</td></tr>
+          <tr><td>Lower Positions</td><td>${compLower}</td></tr>
+          <tr style="font-weight:bold; background-color:#f8f9fa;"><td>Total</td><td>${compImp}</td></tr>
+        </table>
+
+        <h2>What This Tells Me As a Google Ads Consultant</h2>
+        
+        <h3>Market Size</h3>
+        <p>The keyword set generated roughly:<br>
+        <strong>${totalMarket} available impressions</strong></p>
+        <ul>
+          <li>You captured: ${myImp} impressions (${myIS_raw}%)</li>
+          <li>Competitor captured: ${compImp} impressions (${compIS_raw}%)</li>
+        </ul>
+        <p>There are still <strong>${othersImp} impressions</strong> being won by other advertisers or missed entirely by both of you.</p>
+
+        <h3>Head-to-Head Results</h3>
+        <p>When both advertisers appeared:</p>
+        <table>
+          <tr><th>Outcome</th><th>Auctions</th></tr>
+          <tr><td>You above competitor</td><td>~${meAboveComp}</td></tr>
+          <tr><td>Competitor above you</td><td>~${compAboveMe}</td></tr>
+        </table>
+        <p>You won about <strong>${winRate}%</strong> of direct battles. ${winRate >= 50 ? "That's a strong result." : "There is room for improvement here."}</p>
+
+        <h3>The Most Important Insight</h3>
+        <p>Many advertisers focus on beating competitors. ${meAboveComp >= compAboveMe ? "You're already beating this competitor." : "While you are losing direct battles to this competitor, look at the big picture:"}</p>
+        <p>The bigger story is:</p>
+        <table>
+          <tr><th>Metric</th><th>Value</th></tr>
+          <tr><td>Available impressions</td><td>~${totalMarket}</td></tr>
+          <tr><td>Your impressions</td><td>${myImp}</td></tr>
+          <tr><td>Missed impressions</td><td><span class="highlight">~${missedImp}</span></td></tr>
+        </table>
+        <p>You're only capturing about <strong>1 out of every ${(totalMarket/myImp).toFixed(1)} searches</strong> available to you.</p>
+        <p>If this campaign is profitable, I'd spend my optimization effort on:</p>
+        <ul>
+          <li><strong>Lost IS (Budget)</strong> &mdash; check if campaigns are budget-constrained.</li>
+          <li><strong>Lost IS (Rank)</strong> &mdash; check if Ad Rank is limiting visibility.</li>
+          <li>Improve Quality Score.</li>
+          <li>Expand keyword coverage if search volume exists.</li>
+          <li>Increase bids on converting keywords.</li>
+        </ul>
+
+        <h3>Consultant's Verdict</h3>
+        <p>Against this competitor specifically:</p>
+        <ul>
+          <li>${ratioText}</li>
+          <li>You beat them in ~${meAboveComp} out of ${overlapViews} direct auctions.</li>
+          <li>You get the #1 position ${myAbsTopViews} times versus their ${compAbsTopViews} times.</li>
+        </ul>
+        <p style="font-size: 18px; line-height: 1.5;"><strong>The competitor is not currently the threat. The real opportunity is recovering some of the <span class="highlight">${missedImp} impressions</span> you're losing from the market. That's where the biggest growth is likely hiding.</strong></p>
+      `;
+
       let outputDiv = document.getElementById("output");
+      outputDiv.innerHTML = html;
       outputDiv.style.display = "block";
-      
-      outputDiv.innerHTML = 
-        "<h3>Market Overview</h3>" +
-        "<strong>Total Market Searches:</strong> " + Math.round(totalMarketSearches) + " potential patients<br>" +
-        "<strong>Your Total Impressions:</strong> " + Math.round(myImp) + " views<br>" +
-        "<strong>Competitor Impressions:</strong> " + Math.round(compImp) + " views<br>" +
-        
-        "<h3>Ad Placement (Who got the best spots?)</h3>" +
-        "<strong>Your Top of Page Views:</strong> " + Math.round(myTopViews) + "<br>" +
-        "<strong>Competitor Top of Page Views:</strong> " + Math.round(compTopViews) + "<br>" +
-        "<strong>Your Absolute #1 Spot Views:</strong> " + Math.round(myAbsTopViews) + "<br>" +
-        "<strong>Competitor Absolute #1 Spot Views:</strong> " + Math.round(compAbsTopViews) + "<br>" +
-        
-        "<h3>Head-to-Head Battles</h3>" +
-        "You both appeared on the page at the exact same time <strong>" + Math.round(headToHeadBattles) + "</strong> times.<br>" +
-        "Out of those battles, the competitor's ad was placed above yours <span class='highlight'>" + Math.round(timesBeatenByCompetitor) + "</span> times.<br>" +
-        "Overall, you outranked them (showed up higher or showed up when they didn't) <span class='success'>" + Math.round(timesYouWon) + "</span> times.";
     }
   </script>
 
